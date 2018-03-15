@@ -1,47 +1,5 @@
-var ajcs_start = function (isTest){
-  result = "";
-  
-  // Account information
-  account = [
+var ajcs_start = function (){
 
-    { username : $("username").val() , password: $("#password").val()},
-
-
-  ];
-
-  // Minor error handler
-  if( !$("#username").val() || !$("#password").val()){
-    console.log("error")
-    return false;
-  }
-
-  // Process
-  $(account).each(function(index, value){
-
-      login = false;
-
-      //Login Credentials
-      $form = $('<form name="frm"></form>');
-      $form.append('<input type="text" name="username" class="form-control" placeholder="Username" maxlength="15" value="'+ value.username +'">');
-      $form.append('<input type="password" name="password" class="form-control" placeholder="Password" maxlength="15" value="'+ value.password +'">');
-
-
-      //Ajax Login
-      while(!login){
-          jQuery.ajaxSetup({async:false});
-          $.ajax({
-              type: "POST",
-              url: "http://www.mineraview.com/login_process.php",
-              data:  $form.serialize(),
-              error: function(xhr){
-                  console.log( "LOGIN FAIL");
-              },
-              success: function(data){
-                  console.log( "LOGIN SUCCESS");
-                  login = true;
-              }		
-          });
-      }
 
       if(!isTest){
         //Flags
@@ -96,7 +54,7 @@ var ajcs_start = function (isTest){
                             },
                             success: function(data){
                                 view = true;
-                                console.log( value.username + " PAY SUCESS");
+                                console.log( "PAY SUCESS");
                             }		
                         });
                     }
@@ -109,7 +67,7 @@ var ajcs_start = function (isTest){
                             },
                             success: function(data){
                                 view_result = true;
-                                console.log( value.username + " PROCESS SUCCESS");
+                                console.log( "PROCESS SUCCESS");
                             }		
                         });		
                     }
@@ -133,31 +91,42 @@ var ajcs_start = function (isTest){
               success: function(data){
                   ads_status = true;
                   dashboard_data = data;
-                  result = " [ " + value.username + " ] DASHBOARD : " + $(dashboard_data).find(".row.mt").children(".col-md-6.col-sm-6.mb").find("h1").text();
-                  console.log( " [ " + value.username + " ] DASHBOARD : " + $(dashboard_data).find(".row.mt").children(".col-md-6.col-sm-6.mb").find("h1").text());
+                  result = " DASHBOARD : " + $(dashboard_data).find(".row.mt").children(".col-md-6.col-sm-6.mb").find("h1").text();
+                  console.log( " DASHBOARD : " + $(dashboard_data).find(".row.mt").children(".col-md-6.col-sm-6.mb").find("h1").text());
               }		
           });
 
       }
 
-      logout = false;
 
-      // Ajax Logout
-      while(!logout){
-          jQuery.ajaxSetup({async:false});
-          $.ajax({
-              url: "http://www.mineraview.com/dashboard/logoff.php",
-              error: function(xhr){
-                  console.log( "LOGOFF FAIL");
-              },
-              success: function(data){
-                  logout = true;
-                  console.log( "LOGOFF SUCCESS");
-              }		
-          });
-      }
   });
   
   alert(result);
 
+}
+
+var ajcs_status = function(){
+      result = "";
+  
+      ads_status = false;
+
+      // Ajax ViewAds
+      while(!ads_status){
+          jQuery.ajaxSetup({async:false});
+          $.ajax({
+              url: "http://www.mineraview.com/dashboard/res_user.php",
+              error: function(xhr){
+                  console.log( "DASHBOARD FAIL");
+              },
+              success: function(data){
+                  ads_status = true;
+                  dashboard_data = data;
+                  result = " DASHBOARD : " + $(dashboard_data).find(".row.mt").children(".col-md-6.col-sm-6.mb").find("h1").text();
+                  console.log( " DASHBOARD : " + $(dashboard_data).find(".row.mt").children(".col-md-6.col-sm-6.mb").find("h1").text());
+              }		
+          });
+
+      }
+  
+    alert(result);
 }
