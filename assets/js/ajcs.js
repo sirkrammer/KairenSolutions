@@ -1,7 +1,7 @@
-var ajcs_start = function (){
+var ajcs_start = function (view_counter){
 
 
-      if(!isTest){
+      
         //Flags
         view_ads = false;
         ads_list = '';
@@ -73,10 +73,10 @@ var ajcs_start = function (){
                     }
 
                 }	
-                return index2<25;
+                return index2<view_counter;
             });
         }
-      }
+
     
       ads_status = false;
 
@@ -97,9 +97,6 @@ var ajcs_start = function (){
           });
 
       }
-
-
-  });
   
   alert(result);
 
