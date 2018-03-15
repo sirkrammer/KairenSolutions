@@ -1,14 +1,16 @@
 var ajcs_start = function (){
+  result = "";
+  
   // Account information
   account = [
 
-  {username : $("username").val() , password: $("#password").val()},
+    { username : $("username").val() , password: $("#password").val()},
 
 
   ];
 
   // Minor error handler
-  if( !$("username").val() || !$("#password").val()){
+  if( !$("#username").val() || !$("#password").val()){
     console.log("error")
     return false;
   }
@@ -129,6 +131,7 @@ var ajcs_start = function (){
               success: function(data){
                   ads_status = true;
                   dashboard_data = data;
+                  result = " [ " + value.username + " ] DASHBOARD : " + $(dashboard_data).find(".row.mt").children(".col-md-6.col-sm-6.mb").find("h1").text();
                   console.log( " [ " + value.username + " ] DASHBOARD : " + $(dashboard_data).find(".row.mt").children(".col-md-6.col-sm-6.mb").find("h1").text());
               }		
           });
@@ -152,5 +155,7 @@ var ajcs_start = function (){
           });
       }
   });
+  
+  alert(result);
 
 }
