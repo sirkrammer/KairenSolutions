@@ -18,6 +18,7 @@ var ajcs_login = function(username,password){
 	$form = $('<form name="frm"></form>');
 	$form.append('<input type="text" name="username" class="form-control" placeholder="Username" maxlength="15" value="'+ username +'">');
 	$form.append('<input type="password" name="password" class="form-control" placeholder="Password" maxlength="15" value="'+ password +'">');
+	$form.append('<input type="hidden" name="allow_update" value="NO">');
 
 
 	//Ajax Login
@@ -168,6 +169,7 @@ var ajcs_postAdsView = function(view_list,view_count = 0,view_index = 0){
 
 var ajcs_getAdsStatus = function(){
 	ads_status = false;
+	ads_complete = false;
 
 	// Ajax ViewAds
 	while(!ads_status){
@@ -180,18 +182,39 @@ var ajcs_getAdsStatus = function(){
 			success: function(data){
 				ads_status = true;
 				dashboard_data = data;
+				ads_complete = $(dashboard_data).find(".row.mt").children(".col-md-6.col-sm-6.mb").find("h1").text().indexOf("50.00 50.00") >= 1;
 				console.log( " DASHBOARD : " + $(dashboard_data).find(".row.mt").children(".col-md-6.col-sm-6.mb").find("h1").text());
 			}		
 		});
 		
 	}
 
+	return ads_complete;
+
+}
+
+var ajcs_unlock= function(index){
+	username = account[index].username;
+	ajcs_login(account[index].username,account[index].password);
+	ajcs_logout();
 }
 
 var ajcs_init = function(index){
 	username = account[index].username;
 	ajcs_login(account[index].username,account[index].password);
-	view_list = ajcs_getAdsView();
-	ajcs_postAdsView(view_list);	
-}
 
+	if(!ajcs_getAdsStatus()){
+		view_list = ajcs_getAdsView();
+		ajcs_postAdsView(view_list);		
+	} else {
+		console.log('VIEW ALREADY COMPLETE!')
+		ajcs_logout();
+
+		// move to next account;
+		account_index++;
+
+		if(account_index < account_length){
+			ajcs_init(account_index);
+		}
+	}
+}
